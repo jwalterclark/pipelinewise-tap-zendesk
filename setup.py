@@ -10,6 +10,7 @@ setup(name='pipelinewise-tap-zendesk',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_zendesk'],
       install_requires=[
+          'pytz>=2018.4,<=2018.9'
           'singer-python==5.2.1',
           'zenpy==2.0.18',
       ],
