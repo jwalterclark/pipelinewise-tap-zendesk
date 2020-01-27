@@ -485,6 +485,23 @@ class SLAPolicies(Stream):
         for policy in self.client.sla_policies():
             yield (self.stream, policy)
 
+class JiraLinks(Stream):
+    name = "jira_links"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
+
+    def sync(self, state):
+        bookmark = self.get_bookmark(state)
+
+        fields = self.client.jira_links()
+        for field in fields:
+            if utils.strptime_with_tz(field.updated_at) >= bookmark:
+                # NB: We don't trust that the records come back ordered by
+                # updated_at (we've observed out-of-order records),
+                # so we can't save state until we've seen all records
+                self.update_bookmark(state, field.updated_at)
+                yield (self.stream, field)
+
 STREAMS = {
     "tickets": Tickets,
     "groups": Groups,
@@ -500,4 +517,5 @@ STREAMS = {
     "tags": Tags,
     "ticket_metrics": TicketMetrics,
     "sla_policies": SLAPolicies,
+    "jira_links": JiraLinks,
 }
