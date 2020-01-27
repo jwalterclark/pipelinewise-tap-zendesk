@@ -105,6 +105,17 @@ def do_sync(client, catalog, state, start_date):
             LOGGER.info("%s: Skipping - not selected", stream_name)
             continue
 
+        # if starting_stream:
+        #     if starting_stream == stream_name:
+        #         LOGGER.info("%s: Resuming", stream_name)
+        #         starting_stream = None
+        #     else:
+        #         LOGGER.info("%s: Skipping - already synced", stream_name)
+        #         continue
+        # else:
+        #     LOGGER.info("%s: Starting", stream_name)
+
+
         key_properties = metadata.get(mdata, (), 'table-key-properties')
         singer.write_schema(stream_name, stream.schema.to_dict(), key_properties)
 
